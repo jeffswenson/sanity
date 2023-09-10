@@ -5,11 +5,19 @@
 Sanity is a golang library for server side HTML rendering. It allows you to
 write and compose go functions that generate HTML. 
 
+```
+go get github.com/jeffswenson/sanity@latest
+```
+
 ```go
+package main
+
 import (
-    "github.com/jeffswenson/sanity/pkg/attr"
-    "github.com/jeffswenson/sanity/pkg/html"
-    "github.com/jeffswenson/sanity/pkg/tag"
+	"fmt"
+
+	"github.com/jeffswenson/sanity/pkg/attr"
+	"github.com/jeffswenson/sanity/pkg/html"
+	"github.com/jeffswenson/sanity/pkg/tag"
 )
 
 var fruit = []string { "apple", "orange", "banna" }
@@ -21,14 +29,13 @@ var fruit = []string { "apple", "orange", "banna" }
 //     <li>orange</li>
 //     <li>banna</li>
 // </ul>
-//
 func fruitView(fruitList []string) html.Node {
-    return tag.UL(
-        attr.Class("fruit-list"), 
-        html.ForEach(fruitList, func(fruit string) html.Node {
-           return tag.LI(html.InnerText(fruit)) 
-        ),
-    })
+	return tag.UL(
+		attr.Class("fruit-list"), 
+		html.ForEach(fruitList, func(fruit string) html.Node {
+			return tag.LI(html.InnerText(fruit)) 
+		}),
+	)
 }
 
 func main() {
