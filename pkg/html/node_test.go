@@ -7,7 +7,7 @@ import (
 )
 
 func TestNodeDefault(t *testing.T) {
-	var n Node	
+	var n Node
 	require.Empty(t, n.Render())
 	require.Empty(t, n.String())
 }

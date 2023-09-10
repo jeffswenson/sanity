@@ -4,18 +4,18 @@ package html
 // the sanity library. Nodes are immutable and may be safely shared
 // across threads.
 //
-// - The `tags` package contains constructors for all standard HTML5
-//   tags.
-// - The `attr` package contains constructors for all standard HTML5
-//   attributes.
-// - The `html` package containing the Node implementation contains
-//   generic constructors and utilities.
+//   - The `tags` package contains constructors for all standard HTML5
+//     tags.
+//   - The `attr` package contains constructors for all standard HTML5
+//     attributes.
+//   - The `html` package containing the Node implementation contains
+//     generic constructors and utilities.
 type Node struct {
 	// nodeType is an enum that acts as a tag for Node. Node is basically a
 	// tagged union. The initial implementaiton of node was a little cleaner.
 	// It used interfaces and dynamic dispatch instead of a switch on nodeType.
-	//	
-	// E.g. 
+	//
+	// E.g.
 	// type node interface {
 	//   renderAsAttribute([]bytes) []bytes
 	//   reanderAsContent([]bytes) []bytes
@@ -26,9 +26,9 @@ type Node struct {
 	// mean attributes require no allocations. Each tag requires only a single
 	// allocation, which is the slice containing all of its children.
 	nodeType nodeType
-	str1    string
-	str2    string
-	data    any
+	str1     string
+	str2     string
+	data     any
 }
 
 func (n Node) String() string {

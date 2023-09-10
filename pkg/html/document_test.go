@@ -8,16 +8,16 @@ import (
 
 func TestDocument(t *testing.T) {
 	type testCase struct {
-		node  Node
+		node   Node
 		result string
 	}
-	tests := []testCase {
+	tests := []testCase{
 		{
 			Document(),
 			"<!DOCTYPE html><html></html>",
 		},
 		{
-			Document(NewAttribute("lang", "en"), InnerText("Hello World!")), 
+			Document(NewAttribute("lang", "en"), InnerText("Hello World!")),
 			`<!DOCTYPE html><html lang="en">Hello World!</html>`,
 		},
 	}

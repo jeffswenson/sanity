@@ -447,6 +447,7 @@ func Dir(value string) html.Node {
 func DirName(value string) html.Node {
 	return html.NewAttribute("dirname", value)
 }
+
 // Draggable constructs an html.Node for the `draggable` attribute.
 //
 // The `draggable` attribute is used to indicate whether an element can be

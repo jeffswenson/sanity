@@ -8,11 +8,11 @@ import (
 
 func TestNewAttribute(t *testing.T) {
 	type testCase struct {
-		attribute string	
-		value string
-		result string
+		attribute string
+		value     string
+		result    string
 	}
-	tests := []testCase {
+	tests := []testCase{
 		{"id", "", `<div id=""></div>`},
 		{"class", "foo class", `<div class="foo class"></div>`},
 		{"escape<test", "\"", `<div escape&lt;test="&#34;"></div>`},
@@ -25,10 +25,10 @@ func TestNewAttribute(t *testing.T) {
 
 func TestBoolAttribute(t *testing.T) {
 	type testCase struct {
-		attribute string	
-		result string
+		attribute string
+		result    string
 	}
-	tests := []testCase {
+	tests := []testCase{
 		{"async", `<link async>`},
 		{"default", `<link default>`},
 		{"escape<test", `<link escape&lt;test>`},

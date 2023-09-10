@@ -10,7 +10,7 @@ import "html"
 func InnerText(content string) Node {
 	return Node{
 		nodeType: nodeTypeRawText,
-		str1:    html.EscapeString(content),
+		str1:     html.EscapeString(content),
 	}
 }
 
