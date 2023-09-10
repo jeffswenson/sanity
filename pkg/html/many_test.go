@@ -21,7 +21,7 @@ func TestForEachEmpty(t *testing.T) {
 }
 
 func TestForEachOneTag(t *testing.T) {
-	node := ForEach([]string {
+	node := ForEach([]string{
 		"orange",
 	}, func(model string) Node {
 		return NewTag("li", InnerText(model))
@@ -31,7 +31,7 @@ func TestForEachOneTag(t *testing.T) {
 }
 
 func TestForEachManyTag(t *testing.T) {
-	node := ForEach([]string {
+	node := ForEach([]string{
 		"orange",
 		"bannana",
 		"apple",

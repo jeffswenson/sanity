@@ -7,8 +7,8 @@ import "html"
 func NewAttribute(name string, value string) Node {
 	return Node{
 		nodeType: nodeTypeAttr,
-		str1:    html.EscapeString(name),
-		str2:    html.EscapeString(value),
+		str1:     html.EscapeString(name),
+		str2:     html.EscapeString(value),
 	}
 }
 
@@ -18,6 +18,6 @@ func NewAttribute(name string, value string) Node {
 func NewBoolAttribute(name string) Node {
 	return Node{
 		nodeType: nodeTypeBoolAttr,
-		str1:    html.EscapeString(name),
+		str1:     html.EscapeString(name),
 	}
 }

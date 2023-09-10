@@ -8,10 +8,10 @@ import (
 
 func TestInnerText(t *testing.T) {
 	type testCase struct {
-		argument string	
-		result string
+		argument string
+		result   string
 	}
-	tests := []testCase {
+	tests := []testCase{
 		{"", ""},
 		{"contains no html", "contains no html"},
 		{"<div></div>", "&lt;div&gt;&lt;/div&gt;"},
@@ -24,10 +24,10 @@ func TestInnerText(t *testing.T) {
 
 func TestRawInnerText(t *testing.T) {
 	type testCase struct {
-		argument string	
-		result string
+		argument string
+		result   string
 	}
-	tests := []testCase {
+	tests := []testCase{
 		{"", ""},
 		{"contains no html", "contains no html"},
 		{"<div></div>", "<div></div>"},

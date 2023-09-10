@@ -4,17 +4,17 @@ package html
 func NewTag(name string, options ...Node) Node {
 	return Node{
 		nodeType: nodeTypeTag,
-		str1:    name,
-		data:    options,
+		str1:     name,
+		data:     options,
 	}
 }
 
 // NewVoidTag creates an element that has no closing tag. Like <img> or
-// <input>. 
+// <input>.
 func NewVoidTag(name string, options ...Node) Node {
 	return Node{
 		nodeType: nodeTypeVoidTag,
-		str1:    name,
-		data:    options,
+		str1:     name,
+		data:     options,
 	}
 }
