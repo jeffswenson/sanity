@@ -1,0 +1,20 @@
+.navigation {
+	margin: 0.5em;
+	font-size: 2em;
+}
+
+.article {
+	margin: 1em;	
+}
+
+.article a {
+	color: black;
+	font-size: 1.25em;
+	text-decoration: none;
+}
+
+.article .article-subtitle-line span {
+	padding-right: 0.5em;	
+	font-size: 0.75em;
+	color: grey;
+}

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Sanity News</title>
+	<link rel="stylesheet" href="/static/stylesheet.css">
+</head>
+<body>
+	{{ range . }}
+	<div class="article">
+		<div class="article-title-line">
+			<a class="article-name" href="{{.Link}}">
+				{{ .ArticleName }}
+			</a>
+		</div>
+		<div class="article-subtitle-line">
+			<span>{{ .AuthorName }}</span>
+			<span>{{ .UpvoteCount }}</span>
+			<span>{{ .PostedAt }}</span>
+		</div>
+	</div>
+	{{ end}}
+</body>
+</html>
