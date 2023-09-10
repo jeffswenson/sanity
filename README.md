@@ -30,7 +30,7 @@ func fruitView(fruitList []string) html.Node {
         ),
     })
 }
-`
+
 func main() {
     node := fruitView(fruit)
     fmt.Print(node)
