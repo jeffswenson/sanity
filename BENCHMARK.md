@@ -1,27 +1,27 @@
 # Benchmarks
 
-Sanity's benchmarks were designed to compare the performance of sanity with the
-performance of `text/html`. It's difficult fairly compare sanity to `text/html`
-because their performance penalties are asymteric.
+Sanity's benchmarks were designed to compare the performance of Sanity to the
+performance of `text/html`. It is difficult fairly compare Sanity to
+`text/html` because their performance penalties are asymteric.
 
 `text/html` uses reflection when interacting with the template's model.
-Reflection in go is relatively slow, so the cost of most templates is driven by
+Reflection in Go is relatively slow, so the cost of most templates is driven by
 the number `{{ }}` blocks in the template. If a template contains no dynamic
 blocks, it compiles down to a single `io.Writer.Write` call and will outperform
-sanity.
+Sanity.
 
-The internal design of sanity was driven by a desire to minimize the number of
-allocations required to build a node tree, but even so every sanity tag
-requires exactly one allocation and benchmarking sanity is effectively
-benchmarking the go allocator and garbage collection. So the cost of rendering
-a sanity view directly tracks the number of tags rendered. But one allocation
-is much faster than one `{{ }}` block in a template, so most sanity views will
-out perform an equivalent `text/html` template.
+The internal design of Sanity was driven by a desire to minimize the number of
+allocations required to build a node tree, but even so every Sanity tag
+requires exactly one allocation and benchmarking Sanity is effectively
+benchmarking the Go allocator and garbage collector. So the cost of rendering a
+Sanity view directly tracks the number of tags rendered. But one allocation is
+much faster than one `{{ }}` block in a template, so most Sanity views will out
+perform an equivalent `text/html` template.
 
 ## Micro Benchmarks
 
 `internal/benchmark` contains micro benchmarks. Rendering a list with 1k
-elements requires 145us using sanity and 803us using `text/html`.
+elements requires 145us using Sanity and 803us using `text/html`.
 
 ```
 goos: linux
@@ -46,16 +46,16 @@ ok      github.com/jeffswenson/sanity/internal/benchmark 1.295s
 ## HTTP Benchmarks
 
 `internal/benchmarkhttp` contains benchmarks that use the stdlib http server to
-render html content. The html content is similar to a popular oragne tech news
+render HTML content. The HTML content is similar to a popular orange tech news
 site. The benchmark contains tests with and without gzip.
 
-Here are tests run with `GOMAXPROCS=1` and `GOMEMLIMIT=100Mib`. The intent was
-to measure the single threaded throughput and to set a memory limit low enough
-to force frequent garbage collection. The tests were run to saturate the server,
+The tests were run with `GOMAXPROCS=1` and `GOMEMLIMIT=100Mib`. GOMAXPROCS was
+set to measure the single threaded throughput. The memory limit was set to to
+force frequent garbage collection. The tests saturated the server's capacity,
 so the latency numbers are meaningless.
 
-A key takeway from the test is gziping the html costs far more cpu cyles than
-producing the html, so rendering the view is unlikely to be a bottleneck in
+A key takeway from the test is gziping the HTML costs far more cpu cyles than
+producing the HTML, so rendering the view is unlikely to be a bottleneck in
 most applications.
 
 ```
