@@ -5,7 +5,7 @@ func NewTag(name string, options ...Node) Node {
 	return Node{
 		nodeType: nodeTypeTag,
 		str1:     name,
-		data:     options,
+		children: options,
 	}
 }
 
@@ -15,6 +15,6 @@ func NewVoidTag(name string, options ...Node) Node {
 	return Node{
 		nodeType: nodeTypeVoidTag,
 		str1:     name,
-		data:     options,
+		children: options,
 	}
 }

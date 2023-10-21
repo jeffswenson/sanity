@@ -17,7 +17,7 @@ func ForEach[T any](items []T, view func(T) Node) Node {
 	}
 	return Node{
 		nodeType: nodeTypeMany,
-		data:     results,
+		children: results,
 	}
 }
 
@@ -31,6 +31,6 @@ func ForEach[T any](items []T, view func(T) Node) Node {
 func Combine(options ...Node) Node {
 	return Node{
 		nodeType: nodeTypeMany,
-		data:     options,
+		children: options,
 	}
 }
