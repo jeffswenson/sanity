@@ -28,130 +28,97 @@ type Node struct {
 	nodeType nodeType
 	str1     string
 	str2     string
-	data     any
+	children []Node
 }
 
 func (n Node) String() string {
 	return string(n.Render())
 }
 
-// Render converts the node and all of its children into a byte array. Writing
-// the byte array to an io.Writer is slightly more efficient than writing a
-// string.
+// Render converts the node and all of its children into a byte array.
+// Writing the byte array to an io.Writer is slightly more efficient
+// than writing a string.
 //
 // Example Usage:
 // writer.Write(node.Render())
 func (n Node) Render() []byte {
-	return n.renderAsContent(nil)
+	renderer := &renderVisitor{}
+	n.Visit(renderer)
+	return renderer.bytes
+}
+
+// Visit walks the Node tree. It is used by Node.Render to convert the Node
+// tree to HTML.
+func (n *Node) Visit(visitor Visitor) {
+	n.visitAsContent(visitor)
+}
+
+// VisitAttributes visits the node's attributes. This should be used by the
+// visitor.Tag and visitor.VoidTag implementations to visit the tag's
+// attributes.
+func (n *Node) VisitAttributes(visitor Visitor) {
+	for i := range n.children {
+		n.children[i].visitAsAttribute(visitor)
+	}
+}
+
+// VisitChildren visits the node's children. This should be used by visitor.Tag
+// implementation to visit tags and inner HTML contained within the tag.
+func (n *Node) VisitChildren(visitor Visitor) {
+	for i := range n.children {
+		n.children[i].visitAsContent(visitor)
+	}
+}
+
+// Visitor makes it possible to walk the Node tree. See `render.go` for an
+// example visitor implementation. Visitor is used to implement node.Render.
+type Visitor interface {
+	Tag(name string, node *Node)
+	VoidTag(name string, node *Node)
+	Content(content string)
+	Attribute(name string, value *string)
 }
 
 type nodeType uint32
 
 const (
 	nodeTypeEmpty nodeType = iota
+
 	nodeTypeAttr
 	nodeTypeBoolAttr
+
 	nodeTypeTag
 	nodeTypeVoidTag
+
 	nodeTypeRawText
+
 	nodeTypeMany
 )
 
-func (n *Node) renderAsAttribute(bytes []byte) []byte {
+func (n *Node) visitAsAttribute(visitor Visitor) {
 	switch n.nodeType {
 	case nodeTypeAttr:
-		bytes = append(bytes, " "...)
-		return n.renderAttribute(bytes)
+		visitor.Attribute(n.str1, &n.str2)
 	case nodeTypeBoolAttr:
-		bytes = append(bytes, " "...)
-		return n.renderBoolAttribute(bytes)
+		visitor.Attribute(n.str1, nil)
 	case nodeTypeMany:
-		return n.renderManyAsAttribute(bytes)
+		for i := range n.children {
+			n.children[i].visitAsAttribute(visitor)
+		}
 	}
-	return bytes
 }
 
-func (n *Node) renderAsContent(bytes []byte) []byte {
+func (n *Node) visitAsContent(visitor Visitor) {
 	switch n.nodeType {
 	case nodeTypeTag:
-		return n.renderTag(bytes)
+		visitor.Tag(n.str1, n)
 	case nodeTypeVoidTag:
-		return n.renderVoidTag(bytes)
+		visitor.VoidTag(n.str1, n)
 	case nodeTypeRawText:
-		return n.renderRawText(bytes)
+		visitor.Content(n.str1)
 	case nodeTypeMany:
-		return n.renderManyAsContent(bytes)
+		for i := range n.children {
+			n.children[i].visitAsContent(visitor)
+		}
 	}
-	return bytes
-}
-
-func (n *Node) renderAttribute(bytes []byte) []byte {
-	bytes = append(bytes, n.str1...)
-	bytes = append(bytes, "=\""...)
-	bytes = append(bytes, n.str2...)
-	bytes = append(bytes, "\""...)
-	return bytes
-}
-
-func (n *Node) renderBoolAttribute(bytes []byte) []byte {
-	bytes = append(bytes, n.str1...)
-	return bytes
-}
-
-func (n *Node) renderTag(bytes []byte) []byte {
-	children := n.data.([]Node)
-
-	bytes = append(bytes, "<"...)
-	bytes = append(bytes, n.str1...)
-
-	for i := range children {
-		bytes = children[i].renderAsAttribute(bytes)
-	}
-
-	bytes = append(bytes, ">"...)
-
-	for i := range children {
-		bytes = children[i].renderAsContent(bytes)
-	}
-
-	bytes = append(bytes, "</"...)
-	bytes = append(bytes, n.str1...)
-	bytes = append(bytes, ">"...)
-
-	return bytes
-}
-
-func (n *Node) renderVoidTag(bytes []byte) []byte {
-	children := n.data.([]Node)
-
-	bytes = append(bytes, "<"...)
-	bytes = append(bytes, n.str1...)
-
-	for i := range children {
-		bytes = children[i].renderAsAttribute(bytes)
-	}
-
-	bytes = append(bytes, ">"...)
-
-	return bytes
-}
-
-func (n *Node) renderRawText(bytes []byte) []byte {
-	return append(bytes, n.str1...)
-}
-
-func (n *Node) renderManyAsContent(bytes []byte) []byte {
-	children := n.data.([]Node)
-	for i := range children {
-		bytes = children[i].renderAsContent(bytes)
-	}
-	return bytes
-}
-
-func (n *Node) renderManyAsAttribute(bytes []byte) []byte {
-	children := n.data.([]Node)
-	for i := range children {
-		bytes = children[i].renderAsAttribute(bytes)
-	}
-	return bytes
 }
