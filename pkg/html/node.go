@@ -31,54 +31,6 @@ type Node struct {
 	children []Node
 }
 
-func (n Node) String() string {
-	return string(n.Render())
-}
-
-// Render converts the node and all of its children into a byte array.
-// Writing the byte array to an io.Writer is slightly more efficient
-// than writing a string.
-//
-// Example Usage:
-// writer.Write(node.Render())
-func (n Node) Render() []byte {
-	renderer := &renderVisitor{}
-	n.Visit(renderer)
-	return renderer.bytes
-}
-
-// Visit walks the Node tree. It is used by Node.Render to convert the Node
-// tree to HTML.
-func (n *Node) Visit(visitor Visitor) {
-	n.visitAsContent(visitor)
-}
-
-// VisitAttributes visits the node's attributes. This should be used by the
-// visitor.Tag and visitor.VoidTag implementations to visit the tag's
-// attributes.
-func (n *Node) VisitAttributes(visitor Visitor) {
-	for i := range n.children {
-		n.children[i].visitAsAttribute(visitor)
-	}
-}
-
-// VisitChildren visits the node's children. This should be used by visitor.Tag
-// implementation to visit tags and inner HTML contained within the tag.
-func (n *Node) VisitChildren(visitor Visitor) {
-	for i := range n.children {
-		n.children[i].visitAsContent(visitor)
-	}
-}
-
-// Visitor makes it possible to walk the Node tree. See `render.go` for an
-// example visitor implementation. Visitor is used to implement node.Render.
-type Visitor interface {
-	Tag(name string, node *Node)
-	VoidTag(name string, node *Node)
-	Content(content string)
-	Attribute(name string, value *string)
-}
-
 type nodeType uint32
 
 const (
@@ -95,30 +47,18 @@ const (
 	nodeTypeMany
 )
 
-func (n *Node) visitAsAttribute(visitor Visitor) {
-	switch n.nodeType {
-	case nodeTypeAttr:
-		visitor.Attribute(n.str1, &n.str2)
-	case nodeTypeBoolAttr:
-		visitor.Attribute(n.str1, nil)
-	case nodeTypeMany:
-		for i := range n.children {
-			n.children[i].visitAsAttribute(visitor)
-		}
-	}
+func (n Node) String() string {
+	return string(n.Render())
 }
 
-func (n *Node) visitAsContent(visitor Visitor) {
-	switch n.nodeType {
-	case nodeTypeTag:
-		visitor.Tag(n.str1, n)
-	case nodeTypeVoidTag:
-		visitor.VoidTag(n.str1, n)
-	case nodeTypeRawText:
-		visitor.Content(n.str1)
-	case nodeTypeMany:
-		for i := range n.children {
-			n.children[i].visitAsContent(visitor)
-		}
-	}
+// Render converts the node and all of its children into a byte array.
+// Writing the byte array to an io.Writer is slightly more efficient
+// than writing a string.
+//
+// Example Usage:
+// writer.Write(node.Render())
+func (n Node) Render() []byte {
+	renderer := &renderVisitor{}
+	n.Visit(renderer)
+	return renderer.bytes
 }
